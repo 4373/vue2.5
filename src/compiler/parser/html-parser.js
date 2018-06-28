@@ -86,7 +86,7 @@ export function parseHTML (html, options) {
           const commentEnd = html.indexOf('-->')
 
           if (commentEnd >= 0) {
-             // 如果保留注释， 将注释提取出来传入 options.comment方法
+            // 如果保留注释， 将注释提取出来传入 options.comment方法
             if (options.shouldKeepComment) {
               options.comment(html.substring(4, commentEnd))
             }
@@ -124,7 +124,7 @@ export function parseHTML (html, options) {
         // 如果既不是 注释， 结束标签， Doctype等， 那就是开始标签
         // Start tag:
         const startTagMatch = parseStartTag()
-        if (startTagMatch) { 
+        if (startTagMatch) {
           handleStartTag(startTagMatch)
           if (shouldIgnoreFirstNewline(lastTag, html)) {
             advance(1)
@@ -299,7 +299,7 @@ export function parseHTML (html, options) {
     }
 
     // Find the closest opened tag of the same type
-   // 查找stack中最近的 标签类型
+    // 查找stack中最近的 标签类型
     if (tagName) {
       for (pos = stack.length - 1; pos >= 0; pos--) {
         if (stack[pos].lowerCasedTag === lowerCasedTagName) {
