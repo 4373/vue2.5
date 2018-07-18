@@ -24,6 +24,14 @@ export function def (obj: Object, key: string, val: any, enumerable?: boolean) {
 
 /**
  * Parse simple path.
+ * const data = {
+ *   a: {
+ *     b: {
+ *       c: 9
+ *     }
+ *   }
+ * }
+ * parePath('a.b.c')(data) => 9s
  */
 const bailRE = /[^\w.$]/
 export function parsePath (path: string): any {

@@ -71,8 +71,9 @@ export default class Watcher {
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
+      // 如果表达式 或函数 合法， 返回函数
       this.getter = parsePath(expOrFn)
-      if (!this.getter) {
+      if (!this.getter) { // 如果不合法
         this.getter = function () {}
         process.env.NODE_ENV !== 'production' && warn(
           `Failed watching path: "${expOrFn}" ` +

@@ -108,10 +108,13 @@ function initProps (vm: Component, propsOptions: Object) {
 }
 
 function initData (vm: Component) {
+  // 选项data
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
+
+  // 选项data 不是返回的对象
   if (!isPlainObject(data)) {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
@@ -125,8 +128,10 @@ function initData (vm: Component) {
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
+  // 循环data 键名
   while (i--) {
     const key = keys[i]
+    // 如果已被声明为 方法
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -135,16 +140,18 @@ function initData (vm: Component) {
         )
       }
     }
+    // 或者属性
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) {
+    } else if (!isReserved(key)) { // 如果是 _ or $ 开头， 代理到this._data
       proxy(vm, `_data`, key)
     }
   }
+  // 添加到响应系统
   // observe data
   observe(data, true /* asRootData */)
 }

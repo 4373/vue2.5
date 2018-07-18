@@ -18,6 +18,7 @@ export function initMixin (Vue: Class<Component>) {
     // a uid
     vm._uid = uid++
 
+    // 性能追踪 相关
     let startTag, endTag
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -35,8 +36,9 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 构造函数选项的合并
       vm.$options = mergeOptions(
-        resolveConstructorOptions(vm.constructor),
+        resolveConstructorOptions(vm.constructor), // 正常情况下默认返回 Vue.options
         options || {},
         vm
       )
@@ -70,7 +72,7 @@ export function initMixin (Vue: Class<Component>) {
     }
   }
 }
-
+// 初始化内部组件
 function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
@@ -88,6 +90,7 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
   }
 }
 
+// 解析构造函数选项
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {

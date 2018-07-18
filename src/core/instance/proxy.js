@@ -23,11 +23,12 @@ if (process.env.NODE_ENV !== 'production') {
       target
     )
   }
-
+  // 判断浏览器是否支持Proxy
   const hasProxy =
     typeof Proxy !== 'undefined' &&
     Proxy.toString().match(/native code/)
 
+  // 防止修改内置事件修饰符
   if (hasProxy) {
     const isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact')
     config.keyCodes = new Proxy(config.keyCodes, {
@@ -42,11 +43,11 @@ if (process.env.NODE_ENV !== 'production') {
       }
     })
   }
-
+  // 判断是否为全局可用key，或已申明的key
   const hasHandler = {
     has (target, key) {
-      const has = key in target
-      const isAllowed = allowedGlobals(key) || key.charAt(0) === '_'
+      const has = key in target // 已申明的
+      const isAllowed = allowedGlobals(key) || key.charAt(0) === '_' // 全局可用的 或 已_开头的
       if (!has && !isAllowed) {
         warnNonPresent(target, key)
       }

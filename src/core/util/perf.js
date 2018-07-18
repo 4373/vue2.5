@@ -1,3 +1,5 @@
+// 性能追踪 相关代码
+
 import { inBrowser } from './env'
 
 export let mark

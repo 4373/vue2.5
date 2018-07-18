@@ -70,6 +70,7 @@ export function mergeDataOrFn (
   childVal: any,
   vm?: Component
 ): ?Function {
+  // 如果是子组件
   if (!vm) {
     // in a Vue.extend merge, both should be functions
     if (!childVal) {
@@ -113,6 +114,7 @@ strats.data = function (
   vm?: Component
 ): ?Function {
   if (!vm) {
+    // 如果自组件的data 不是一个函数
     if (childVal && typeof childVal !== 'function') {
       process.env.NODE_ENV !== 'production' && warn(
         'The "data" option should be a function ' +
@@ -357,6 +359,7 @@ export function mergeOptions (
   vm?: Component
 ): Object {
   if (process.env.NODE_ENV !== 'production') {
+    // 检查 组件名称
     checkComponents(child)
   }
 
@@ -364,8 +367,11 @@ export function mergeOptions (
     child = child.options
   }
 
+  // 处理 props
   normalizeProps(child, vm)
+  // 注入
   normalizeInject(child, vm)
+  // 指令
   normalizeDirectives(child)
   const extendsFrom = child.extends
   if (extendsFrom) {
