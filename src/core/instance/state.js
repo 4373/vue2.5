@@ -34,12 +34,14 @@ const sharedPropertyDefinition = {
   get: noop,
   set: noop
 }
-
+//  proxy(vm, `_data`, key)
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
+    // this._data[key]
     return this[sourceKey][key]
   }
   sharedPropertyDefinition.set = function proxySetter (val) {
+    // this._data[key] = value
     this[sourceKey][key] = val
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
@@ -106,7 +108,12 @@ function initProps (vm: Component, propsOptions: Object) {
   }
   observerState.shouldConvert = true
 }
-
+/**
+ * 
+ * @param {Vue实例对象} vm
+ * 初始化data属性，  判断data是否合法， 比如是否是返回的对象， 是否和属性或方法同名之类的，
+ * 
+ */
 function initData (vm: Component) {
   // 选项data
   let data = vm.$options.data
@@ -147,7 +154,8 @@ function initData (vm: Component) {
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) { // 如果是 _ or $ 开头， 代理到this._data
+    } else if (!isReserved(key)) { // 如果不是 _ or $ 开头， 
+      // 代理到this._data
       proxy(vm, `_data`, key)
     }
   }

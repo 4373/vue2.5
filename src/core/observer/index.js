@@ -33,9 +33,9 @@ export const observerState = {
  * collect dependencies and dispatches updates.
  */
 export class Observer {
-  value: any;
-  dep: Dep;
-  vmCount: number; // number of vms that has this object as root $data
+  value: any
+  dep: Dep
+  vmCount: number // number of vms that has this object as root $data
 
   constructor (value: any) {
     this.value = value
@@ -43,9 +43,7 @@ export class Observer {
     this.vmCount = 0
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
-      const augment = hasProto
-        ? protoAugment
-        : copyAugment
+      const augment = hasProto ? protoAugment : copyAugment
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
     } else {
@@ -202,10 +200,11 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   }
   const ob = (target: any).__ob__
   if (target._isVue || (ob && ob.vmCount)) {
-    process.env.NODE_ENV !== 'production' && warn(
-      'Avoid adding reactive properties to a Vue instance or its root $data ' +
-      'at runtime - declare it upfront in the data option.'
-    )
+    process.env.NODE_ENV !== 'production' &&
+      warn(
+        'Avoid adding reactive properties to a Vue instance or its root $data ' +
+          'at runtime - declare it upfront in the data option.'
+      )
     return val
   }
   if (!ob) {
@@ -227,10 +226,11 @@ export function del (target: Array<any> | Object, key: any) {
   }
   const ob = (target: any).__ob__
   if (target._isVue || (ob && ob.vmCount)) {
-    process.env.NODE_ENV !== 'production' && warn(
-      'Avoid deleting properties on a Vue instance or its root $data ' +
-      '- just set it to null.'
-    )
+    process.env.NODE_ENV !== 'production' &&
+      warn(
+        'Avoid deleting properties on a Vue instance or its root $data ' +
+          '- just set it to null.'
+      )
     return
   }
   if (!hasOwn(target, key)) {
