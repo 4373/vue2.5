@@ -55,7 +55,7 @@ export function initState (vm: Component) {
   if (opts.data) {
     initData(vm)
   } else {
-    observe(vm._data = {}, true /* asRootData */)
+    observe((vm._data = {}), true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
   if (opts.watch && opts.watch !== nativeWatch) {
@@ -65,10 +65,10 @@ export function initState (vm: Component) {
 
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
-  const props = vm._props = {}
+  const props = (vm._props = {})
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
-  const keys = vm.$options._propKeys = []
+  const keys = (vm.$options._propKeys = [])
   const isRoot = !vm.$parent
   // root instance props should be converted
   observerState.shouldConvert = isRoot
@@ -78,8 +78,10 @@ function initProps (vm: Component, propsOptions: Object) {
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       const hyphenatedKey = hyphenate(key)
-      if (isReservedAttribute(hyphenatedKey) ||
-          config.isReservedAttr(hyphenatedKey)) {
+      if (
+        isReservedAttribute(hyphenatedKey) ||
+        config.isReservedAttr(hyphenatedKey)
+      ) {
         warn(
           `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
           vm
@@ -89,9 +91,9 @@ function initProps (vm: Component, propsOptions: Object) {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
             `Avoid mutating a prop directly since the value will be ` +
-            `overwritten whenever the parent component re-renders. ` +
-            `Instead, use a data or computed property based on the prop's ` +
-            `value. Prop being mutated: "${key}"`,
+              `overwritten whenever the parent component re-renders. ` +
+              `Instead, use a data or computed property based on the prop's ` +
+              `value. Prop being mutated: "${key}"`,
             vm
           )
         }
@@ -109,26 +111,25 @@ function initProps (vm: Component, propsOptions: Object) {
   observerState.shouldConvert = true
 }
 /**
- * 
+ *
  * @param {Vue实例对象} vm
  * 初始化data属性，  判断data是否合法， 比如是否是返回的对象， 是否和属性或方法同名之类的，
- * 
+ *
  */
 function initData (vm: Component) {
   // 选项data
   let data = vm.$options.data
-  data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
-    : data || {}
+  data = vm._data = typeof data === 'function' ? getData(data, vm) : data || {}
 
   // 选项data 不是返回的对象
   if (!isPlainObject(data)) {
     data = {}
-    process.env.NODE_ENV !== 'production' && warn(
-      'data functions should return an object:\n' +
-      'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
-      vm
-    )
+    process.env.NODE_ENV !== 'production' &&
+      warn(
+        'data functions should return an object:\n' +
+          'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
+        vm
+      )
   }
   // proxy data on instance
   const keys = Object.keys(data)
@@ -141,20 +142,19 @@ function initData (vm: Component) {
     // 如果已被声明为 方法
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
-        warn(
-          `Method "${key}" has already been defined as a data property.`,
-          vm
-        )
+        warn(`Method "${key}" has already been defined as a data property.`, vm)
       }
     }
     // 或者属性
     if (props && hasOwn(props, key)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `The data property "${key}" is already declared as a prop. ` +
-        `Use prop default value instead.`,
-        vm
-      )
-    } else if (!isReserved(key)) { // 如果不是 _ or $ 开头， 
+      process.env.NODE_ENV !== 'production' &&
+        warn(
+          `The data property "${key}" is already declared as a prop. ` +
+            `Use prop default value instead.`,
+          vm
+        )
+    } else if (!isReserved(key)) {
+      // 如果不是 _ or $ 开头，
       // 代理到this._data
       proxy(vm, `_data`, key)
     }
@@ -176,7 +176,7 @@ function getData (data: Function, vm: Component): any {
 const computedWatcherOptions = { lazy: true }
 
 function initComputed (vm: Component, computed: Object) {
-  const watchers = vm._computedWatchers = Object.create(null)
+  const watchers = (vm._computedWatchers = Object.create(null))
   // computed properties are just getters during SSR
   const isSSR = isServerRendering()
 
@@ -184,10 +184,7 @@ function initComputed (vm: Component, computed: Object) {
     const userDef = computed[key]
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
-      warn(
-        `Getter is missing for computed property "${key}".`,
-        vm
-      )
+      warn(`Getter is missing for computed property "${key}".`, vm)
     }
 
     if (!isSSR) {
@@ -232,12 +229,12 @@ export function defineComputed (
         ? createComputedGetter(key)
         : userDef.get
       : noop
-    sharedPropertyDefinition.set = userDef.set
-      ? userDef.set
-      : noop
+    sharedPropertyDefinition.set = userDef.set ? userDef.set : noop
   }
-  if (process.env.NODE_ENV !== 'production' &&
-      sharedPropertyDefinition.set === noop) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    sharedPropertyDefinition.set === noop
+  ) {
     sharedPropertyDefinition.set = function () {
       warn(
         `Computed property "${key}" was assigned to but it has no setter.`,
@@ -270,20 +267,17 @@ function initMethods (vm: Component, methods: Object) {
       if (methods[key] == null) {
         warn(
           `Method "${key}" has an undefined value in the component definition. ` +
-          `Did you reference the function correctly?`,
+            `Did you reference the function correctly?`,
           vm
         )
       }
       if (props && hasOwn(props, key)) {
-        warn(
-          `Method "${key}" has already been defined as a prop.`,
-          vm
-        )
+        warn(`Method "${key}" has already been defined as a prop.`, vm)
       }
-      if ((key in vm) && isReserved(key)) {
+      if (key in vm && isReserved(key)) {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
-          `Avoid defining component methods that start with _ or $.`
+            `Avoid defining component methods that start with _ or $.`
         )
       }
     }
@@ -325,14 +319,18 @@ export function stateMixin (Vue: Class<Component>) {
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
   const dataDef = {}
-  dataDef.get = function () { return this._data }
+  dataDef.get = function () {
+    return this._data
+  }
   const propsDef = {}
-  propsDef.get = function () { return this._props }
+  propsDef.get = function () {
+    return this._props
+  }
   if (process.env.NODE_ENV !== 'production') {
     dataDef.set = function (newData: Object) {
       warn(
         'Avoid replacing instance root $data. ' +
-        'Use nested data properties instead.',
+          'Use nested data properties instead.',
         this
       )
     }
